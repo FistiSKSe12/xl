@@ -115,8 +115,6 @@ local Library do
         KeyList = nil,
 
         Colorpickers = { },
-        
-        Unloading = false,
     }
 
     Library.__index = Library
@@ -563,7 +561,13 @@ local Library do
 
         Tween.Create = function(self, Item, Info, Goal, IsRawItem)
             Item = IsRawItem and Item or Item.Instance
-            Info = Info or TweenInfo.new(Library.Tween.Time, Library.Tween.Style, Library.Tween.Direction)
+            
+            -- Safety check for Library.Tween properties
+            if not Library or not Library.Tween then
+                Info = Info or TweenInfo.new(0.2, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out)
+            else
+                Info = Info or TweenInfo.new(Library.Tween.Time, Library.Tween.Style, Library.Tween.Direction)
+            end
 
             local NewTween = {
                 Tween = TweenService:Create(Item, Info, Goal),
@@ -646,8 +650,7 @@ local Library do
                 return
             end
 
-            self.Tween:Pause()
-            self.Tween:Destroy()
+            Tween:Pause()
             self = nil
         end
     end
@@ -666,14 +669,6 @@ local Library do
             setmetatable(NewItem, Instances)
 
             for Property, Value in NewItem.Properties do
-                -- Ensure Text properties are strings
-                if Property == "Text" or Property == "PlaceholderText" then
-                    if type(Value) == "table" then
-                        Value = tostring(Value.Name or Value.name or "")
-                    else
-                        Value = tostring(Value or "")
-                    end
-                end
                 NewItem.Instance[Property] = Value
             end
 
@@ -714,11 +709,13 @@ local Library do
                 return
             end
 
-            Library:AddToTheme(self, Properties)
+            if Library and Library.Theme then
+                Library:AddToTheme(self, Properties)
+            end
         end
 
         Instances.ChangeItemTheme = function(self, Properties)
-            if not self or not self.Instance or (Library and Library.Unloading) then 
+            if not self.Instance then 
                 return
             end
 
@@ -748,7 +745,11 @@ local Library do
         end
 
         Instances.Tween = function(self, Info, Goal)
-            if not self.Instance or (Library and Library.Unloading) then 
+            if not self.Instance then 
+                return
+            end
+
+            if not Library then
                 return
             end
 
@@ -1023,64 +1024,20 @@ local Library do
     })
 
     Library.Unload = function(self)
-        -- Set unloading flag to prevent further operations
-        self.Unloading = true
-        
-        -- Disconnect all connections
-        for Index, Value in pairs(self.Connections or {}) do 
-            if Value and Value.Connection then
-                Value.Connection:Disconnect()
-            end
+        for Index, Value in self.Connections do 
+            Value.Connection:Disconnect()
         end
-        
-        -- Close all threads
-        for Index, Value in pairs(self.Threads or {}) do 
-            if Value then
-                coroutine.close(Value)
-            end
+
+        for Index, Value in self.Threads do 
+            coroutine.close(Value)
         end
-        
-        -- Clear theme items and map
-        self.ThemeItems = {}
-        self.ThemeMap = {}
-        
-        -- Clean up holder
+
         if self.Holder then 
             self.Holder:Clean()
         end
-        
-        -- Clean up mobile toggle if it exists
-        if self.Pages then
-            for _, PageData in pairs(self.Pages) do
-                if PageData and type(PageData) == "table" and PageData.Window then
-                    if PageData.Window.MobileToggle then
-                        PageData.Window.MobileToggle:Clean()
-                        PageData.Window.MobileToggle = nil
-                    end
-                end
-            end
-        end
-        
-        -- Clean up any global mobile toggle references
-        pcall(function()
-            if getgenv().Library and getgenv().Library.MobileToggle then
-                getgenv().Library.MobileToggle:Clean()
-                getgenv().Library.MobileToggle = nil
-            end
-        end)
-        
-        -- Clear all references
-        self.Connections = {}
-        self.Threads = {}
-        self.Pages = {}
-        self.Sections = {}
-        self.OpenFrames = {}
-        
-        -- Safely clean up Library references
-        pcall(function()
-            Library = nil 
-            getgenv().Library = nil
-        end)
+
+        Library = nil 
+        getgenv().Library = nil
 
         UserInputService.MouseIconEnabled = true
     end
@@ -1101,14 +1058,10 @@ local Library do
     end
 
     Library.Thread = function(self, Function)
-        if self.Unloading then return end
-        
         local NewThread = coroutine.create(Function)
         
         coroutine.wrap(function()
-            if not self.Unloading then
-                coroutine.resume(NewThread)
-            end
+            coroutine.resume(NewThread)
         end)()
 
         TableInsert(self.Threads, NewThread)
@@ -1128,8 +1081,6 @@ local Library do
     end
 
     Library.Connect = function(self, Event, Callback, Name)
-        if self.Unloading then return end
-        
         Name = Name or StringFormat("Connection%s%s", self.UnnamedConnections + 1, HttpService:GenerateGUID(false))
 
         local NewConnection = {
@@ -1140,9 +1091,7 @@ local Library do
         }
 
         Library:Thread(function()
-            if not self.Unloading and Event and Callback then
-                NewConnection.Connection = Event:Connect(Callback)
-            end
+            NewConnection.Connection = Event:Connect(Callback)
         end)
 
         TableInsert(self.Connections, NewConnection)
@@ -1164,6 +1113,10 @@ local Library do
     end
 
     Library.AddToTheme = function(self, Item, Properties)
+        if not self or not self.Theme then
+            return
+        end
+        
         Item = Item.Instance or Item 
 
         local ThemeData = {
@@ -1270,7 +1223,9 @@ local Library do
     end
 
     Library.ChangeItemTheme = function(self, Item, Properties)
-        if self.Unloading then return end
+        if not self or not self.ThemeMap then
+            return
+        end
         
         Item = Item.Instance or Item
 
@@ -1283,18 +1238,14 @@ local Library do
     end
 
     Library.ChangeTheme = function(self, Theme, Color)
-        if self.Unloading then return end
-        
         self.Theme[Theme] = Color
 
-        for _, Item in pairs(self.ThemeItems or {}) do
-            if Item and Item.Properties and Item.Item then
-                for Property, Value in pairs(Item.Properties) do
-                    if type(Value) == "string" and Value == Theme then
-                        Item.Item[Property] = Color
-                    elseif type(Value) == "function" then
-                        Item.Item[Property] = Value()
-                    end
+        for _, Item in self.ThemeItems do
+            for Property, Value in Item.Properties do
+                if type(Value) == "string" and Value == Theme then
+                    Item.Item[Property] = Color
+                elseif type(Value) == "function" then
+                    Item.Item[Property] = Value()
                 end
             end
         end
@@ -1354,7 +1305,7 @@ local Library do
                     FontFace = Library.Font,
                     TextColor3 = FromRGB(235, 235, 235),
                     BorderColor3 = FromRGB(0, 0, 0),
-                    Text = tostring(Data.Text or ""),
+                    Text = Data.Text,
                     BackgroundTransparency = 1,
                     BorderSizePixel = 0,
                     AutomaticSize = Enum.AutomaticSize.XY,
@@ -2126,7 +2077,9 @@ local Library do
                     task.wait(0.1)
 
                     SubItems["NewButton"]:ChangeItemTheme({BackgroundColor3 = "Element", BorderColor3 = "Border"})
-                    SubItems["NewButton"]:Tween(nil, {BackgroundColor3 = Library.Theme.Element})
+                    if Library and Library.Theme then
+                        SubItems["NewButton"]:Tween(nil, {BackgroundColor3 = Library.Theme.Element})
+                    end
                 end
 
                 function NewButton:SetVisibility(Bool)
@@ -2146,7 +2099,9 @@ local Library do
 
                 SubItems["NewButton"]:OnHover(function()
                     SubItems["NewButton"]:ChangeItemTheme({BackgroundColor3 = "Hovered Element", BorderColor3 = "Border"})
-                    SubItems["NewButton"]:Tween(nil, {BackgroundColor3 = Library.Theme["Hovered Element"]})
+                    if Library and Library.Theme then
+                        SubItems["NewButton"]:Tween(nil, {BackgroundColor3 = Library.Theme["Hovered Element"]})
+                    end
                 end)
 
                 SubItems["NewButton"]:OnHoverLeave(function()
@@ -2363,12 +2318,16 @@ local Library do
 
             Items["Slider"]:OnHover(function()
                 Items["RealSlider"]:ChangeItemTheme({BackgroundColor3 = "Hovered Element", BorderColor3 = "Border"})
-                Items["RealSlider"]:Tween(nil, {BackgroundColor3 = Library.Theme["Hovered Element"]})
+                if Library and Library.Theme then
+                    Items["RealSlider"]:Tween(nil, {BackgroundColor3 = Library.Theme["Hovered Element"]})
+                end
             end)
 
             Items["Slider"]:OnHoverLeave(function()
                 Items["RealSlider"]:ChangeItemTheme({BackgroundColor3 = "Element", BorderColor3 = "Border"})
-                Items["RealSlider"]:Tween(nil, {BackgroundColor3 = Library.Theme["Element"]})
+                if Library and Library.Theme then
+                    Items["RealSlider"]:Tween(nil, {BackgroundColor3 = Library.Theme["Element"]})
+                end
             end)
 
             if Data.Default then 
@@ -5837,32 +5796,6 @@ local Library do
                 Window:SetOpen(not Window.IsOpen)
             end
         end)
-        
-        -- Mobile toggle button
-        if IsMobile then
-            local MobileToggle = Instances:Create("TextButton", {
-                Parent = gethui(),
-                Name = "MobileToggle",
-                Text = "Menu",
-                FontFace = Library.Font or Font.new("rbxasset://fonts/families/SourceSansPro.json"),
-                TextSize = 14,
-                TextColor3 = FromRGB(255, 255, 255),
-                BackgroundColor3 = FromRGB(20, 24, 21),
-                BorderColor3 = FromRGB(42, 49, 45),
-                BorderSizePixel = 2,
-                Size = UDim2New(0, 60, 0, 30),
-                Position = UDim2New(0, 10, 0, 10),
-                ZIndex = 1000
-            })
-            
-            MobileToggle:AddToTheme({BackgroundColor3 = "Inline", BorderColor3 = "Outline", TextColor3 = "Text"})
-            
-            MobileToggle:Connect("TouchTap", function()
-                Window:SetOpen(not Window.IsOpen)
-            end)
-            
-            Window.MobileToggle = MobileToggle
-        end
 
         local SearchStepped
 
@@ -6057,9 +5990,6 @@ local Library do
         return setmetatable(Section, Library.Sections)
     end
     
-    -- Set up metatable for Library.Sections
-    Library.Sections.__index = Library.Sections
-
     Library.Sections.Toggle = function(self, Data)
         Data = Data or { }
 
@@ -6241,6 +6171,11 @@ local Library do
     end
 
     Library.Sections.Label = function(self, Name)
+        -- Handle both string and table formats
+        if type(Name) == "table" then
+            Name = Name.Name or Name.name or "Label"
+        end
+        
         local Label = {
             Window = self.Window,
             Page = self.Page,
@@ -6250,7 +6185,7 @@ local Library do
         }
 
         local NewLabel, LabelItems = Components:Label({
-            Name = tostring(Label.Name or ""),
+            Name = Label.Name,
             Parent = Label.Section.Items["Content"],
             Page = Label.Page,
         })
@@ -6448,69 +6383,7 @@ local Library do
         return BlankElement, Items
     end
 
-    Library.Sections.Colorpicker = function(self, Data)
-        Data = Data or { }
-
-        local Colorpicker = {
-            Window = self.Window,
-            Page = self.Page,
-            Section = self,
-
-            Name = Data.Name or Data.name or "Colorpicker",
-            Flag = Data.Flag or Data.flag or Library:NextFlag(),
-            Default = Data.Default or Data.default or Color3.fromRGB(255, 255, 255),
-            Alpha = Data.Alpha or Data.alpha or 1,
-            Callback = Data.Callback or Data.callback or function() end
-        }
-
-        local NewColorpicker, ColorpickerItems = Components:Colorpicker({
-            Name = Colorpicker.Name,
-            Parent = Colorpicker.Section.Items["Content"],
-            Page = Colorpicker.Page,
-            Alpha = Colorpicker.Alpha
-        })
-
-        NewColorpicker:Set(Colorpicker.Default, Colorpicker.Alpha)
-
-        Library.Flags[Colorpicker.Flag] = Colorpicker.Default
-        Library.SetFlags[Colorpicker.Flag] = NewColorpicker.Set
-
-        return NewColorpicker
-    end
-
-    Library.Sections.Keybind = function(self, Data)
-        Data = Data or { }
-
-        local Keybind = {
-            Window = self.Window,
-            Page = self.Page,
-            Section = self,
-
-            Name = Data.Name or Data.name or "Keybind",
-            Flag = Data.Flag or Data.flag or Library:NextFlag(),
-            Default = Data.Default or Data.default or Enum.KeyCode.E,
-            Mode = Data.Mode or Data.mode or "Toggle",
-            Callback = Data.Callback or Data.callback or function() end
-        }
-
-        local NewKeybind, KeybindItems = Components:Keybind({
-            Name = Keybind.Name,
-            Parent = Keybind.Section.Items["Content"],
-            Page = Keybind.Page,
-            Mode = Keybind.Mode
-        })
-
-        NewKeybind:Set(Keybind.Default)
-
-        Library.Flags[Keybind.Flag] = Keybind.Default
-        Library.SetFlags[Keybind.Flag] = NewKeybind.Set
-
-        return NewKeybind
-    end
-
-    Library.CreateSettingsPage = function(self, Window)
-        local Watermark = nil
-        local KeybindList = nil
+    Library.CreateSettingsPage = function(self, Window, Watermark, KeybindList)
         local SettingsPage = Window:Page({Name = "Settings", SubPages = true}) do 
             local ThemingSubPage = SettingsPage:SubPage({Name = "Theming", Columns = 2}) do 
                 local ThemePresetsSection = ThemingSubPage:Section({Name = "Theme Presets", Side = 2}) do
@@ -6626,7 +6499,27 @@ local Library do
 
             local SettingsSubPage = SettingsPage:SubPage({Name = "Settings", Columns = 2}) do 
                 local SettingsSection = SettingsSubPage:Section({Name = "Settings", Side = 1}) do
-                    -- Watermark and Keybind list removed
+                    SettingsSection:Toggle({
+                        Name = "Watermark",
+                        Flag = "Watermark",
+                        Default = true,
+                        Callback = function(Value)
+                            if Watermark and Watermark.SetVisibility then
+                                Watermark:SetVisibility(Value)
+                            end
+                        end
+                    })
+
+                    SettingsSection:Toggle({
+                        Name = "Keybind list",
+                        Flag = "Keybind list",
+                        Default = true,
+                        Callback = function(Value)
+                            if KeybindList and KeybindList.SetVisibility then
+                                KeybindList:SetVisibility(Value)
+                            end
+                        end
+                    })
 
                     SettingsSection:Slider({
                         Name = "Fade time",

@@ -6499,28 +6499,6 @@ local Library do
 
             local SettingsSubPage = SettingsPage:SubPage({Name = "Settings", Columns = 2}) do 
                 local SettingsSection = SettingsSubPage:Section({Name = "Settings", Side = 1}) do
-                    SettingsSection:Toggle({
-                        Name = "Watermark",
-                        Flag = "Watermark",
-                        Default = true,
-                        Callback = function(Value)
-                            if Watermark and Watermark.SetVisibility then
-                                Watermark:SetVisibility(Value)
-                            end
-                        end
-                    })
-
-                    SettingsSection:Toggle({
-                        Name = "Keybind list",
-                        Flag = "Keybind list",
-                        Default = true,
-                        Callback = function(Value)
-                            if KeybindList and KeybindList.SetVisibility then
-                                KeybindList:SetVisibility(Value)
-                            end
-                        end
-                    })
-
                     SettingsSection:Slider({
                         Name = "Fade time",
                         Flag = "FadeTime",

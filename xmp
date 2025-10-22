@@ -1,0 +1,231 @@
+lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/FistiSKSe12/xl/refs/heads/main/li.lua"))()
+
+t = os.clock()
+
+wnd = lib:Window({
+    Logo = "74093292717999",
+    FadeTime = 0.3,
+})
+
+wtm = lib:Watermark("This is a watermark")
+kbl = lib:KeybindList()
+
+do 
+    cmbtp = wnd:Page({Name = "Combat", SubPages = true})
+    plrp = wnd:Page({Name = "Player", Columns = 2})
+    visp = wnd:Page({Name = "Visuals", Columns = 2})
+    plysp = wnd:Page({Name = "Players", Columns = 2})
+    setp = lib:CreateSettingsPage(wnd, wtm, kbl) 
+    
+    do
+        wpnsp = cmbtp:SubPage({Name = "Weapon", Columns = 2})
+        aimsp = cmbtp:SubPage({Name = "Aimbot", Columns = 2}) 
+
+        do
+            rngs = wpnsp:Section({Name = "Ranged Weapons", Side = 1}) do
+                rngs:Toggle({
+                    Name = "Enabled",
+                    Flag = "RangedWeaponEnabled",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                rngs:Toggle({
+                    Name = "Instant hit",
+                    Flag = "RangedWeaponInstantHit",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                rngs:Toggle({
+                    Name = "Rapid fire",
+                    Flag = "RangedWeaponRapidFire",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                rngs:Toggle({
+                    Name = "Full auto",
+                    Flag = "RangedWeaponFullAuto",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                rngs:Slider({
+                    Name = "Reload time",
+                    Flag = "RangedWeaponReloadTime",
+                    Min = 0,
+                    Suffix = "s",
+                    Max = 5,
+                    Default = 0,
+                    Decimals = 0.01,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                rngs:Dropdown({
+                    Name = "Mode",
+                    Items = {"Burst", "Auto", "Single"},
+                    Flag = "RangedWeaponMode",
+                    Default = "Burst",
+                    Multi = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                btn = rngs:Button()
+                btn:Add("Apply", function()
+                    print("Pressed")
+                end)
+                btn:Add("Reset", function()
+                    print("Pressed 2")
+                end)
+            end
+        end
+
+        do
+            sas = aimsp:Section({Name = "Silent Aim", Side = 1}) do
+                sas:Toggle({
+                    Name = "Enabled",
+                    Flag = "SilentAimEnabled",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                tgl = sas:Toggle({
+                    Name = "FoV Circle",
+                    Flag = "SilentAimFoVEnabled",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                tgl:Colorpicker({
+                    Name = "FoV",
+                    Flag = "SilentAimFoV",
+                    Default = lib.Theme.Accent,
+                    Alpha = 0,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                tgl:Colorpicker({
+                    Name = "FoV",
+                    Flag = "SilentAimFoVOutline",
+                    Default = Color3.fromRGB(0, 0, 0),
+                    Alpha = 0,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                sas:Dropdown({
+                    Name = "Bone",
+                    Flag = "SilentAimBone",
+                    Default = "Head",
+                    Multi = false,
+                    Items = {"Head", "Penis", "Ass", "Thigh", "Tits"},
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                sas:Toggle({
+                    Name = "Manipulation",
+                    Flag = "SilentAimManipulation",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                sas:Slider({
+                    Name = "Radius",
+                    Flag = "FoVRadius",
+                    Min = 1,
+                    Suffix = "px",
+                    Max = 500,
+                    Default = 75,
+                    Decimals = 1,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                sas:Toggle({
+                    Name = "Wall Check",
+                    Flag = "SilentAimFoVWallCheck",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                sas:Toggle({
+                    Name = "Team Check",
+                    Flag = "SilentAimFoVTeamCheck",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                sas:Toggle({
+                    Name = "Death Check",
+                    Flag = "SilentAimFoVDeathCheck",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+            end
+
+            aims = aimsp:Section({Name = "Camera", Side = 2}) do
+                aims:Toggle({
+                    Name = "Enabled",
+                    Flag = "AimbotEnabled",
+                    Default = false,
+                    Callback = function(v)
+                        print(v)
+                    end
+                }):Keybind({
+                    Flag = "AimbotKeybind",
+                    Default = Enum.KeyCode.E,
+                    Mode = "Toggle",
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+
+                aims:Searchbox({
+                    Name = "Searchbox",
+                    Flag = "Searchbox",
+                    Items = {"Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6", "Option 7", "Option 8", "Option 9", "Option 10", "Option 11"},
+                    Multi = false,
+                    Default = "Option 1",
+                    Callback = function(v)
+                        print(v)
+                    end
+                })
+            end
+        end
+    end
+end
+
+lib:Notification("Loaded!", "Menu took "..string.format("%.4f", os.clock() - t).." seconds to load", 5)
+
+getgenv().Library = lib

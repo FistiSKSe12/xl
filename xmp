@@ -7,224 +7,206 @@ wnd = lib:Window({
     FadeTime = 0.3,
 })
 
-showwtm = true
-showkbl = true
-
-wtm = showwtm and lib:Watermark("This is a watermark") or nil
-kbl = showkbl and lib:KeybindList() or nil
+wtm = nil
+kbl = nil
 
 do 
-    cmbtp = wnd:Page({Name = "Combat", SubPages = true})
-    plrp = wnd:Page({Name = "Player", Columns = 2})
-    visp = wnd:Page({Name = "Visuals", Columns = 2})
-    plysp = wnd:Page({Name = "Players", Columns = 2})
-    setp = lib:CreateSettingsPage(wnd, wtm, kbl) 
+    exmp = wnd:Page({Name = "Examples", Columns = 2})
+    setp = lib:CreateSettingsPage(wnd) 
     
     do
-        wpnsp = cmbtp:SubPage({Name = "Weapon", Columns = 2})
-        aimsp = cmbtp:SubPage({Name = "Aimbot", Columns = 2}) 
-
-        do
-            rngs = wpnsp:Section({Name = "Ranged Weapons", Side = 1}) do
-                rngs:Toggle({
-                    Name = "Enabled",
-                    Flag = "RangedWeaponEnabled",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                rngs:Toggle({
-                    Name = "Instant hit",
-                    Flag = "RangedWeaponInstantHit",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                rngs:Toggle({
-                    Name = "Rapid fire",
-                    Flag = "RangedWeaponRapidFire",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                rngs:Toggle({
-                    Name = "Full auto",
-                    Flag = "RangedWeaponFullAuto",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                rngs:Slider({
-                    Name = "Reload time",
-                    Flag = "RangedWeaponReloadTime",
-                    Min = 0,
-                    Suffix = "s",
-                    Max = 5,
-                    Default = 0,
-                    Decimals = 0.01,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                rngs:Dropdown({
-                    Name = "Mode",
-                    Items = {"Burst", "Auto", "Single"},
-                    Flag = "RangedWeaponMode",
-                    Default = "Burst",
-                    Multi = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                btn = rngs:Button()
-                btn:Add("Apply", function()
-                    print("Pressed")
-                end)
-                btn:Add("Reset", function()
-                    print("Pressed 2")
-                end)
-            end
+        ui1 = exmp:Section({Name = "Basic Elements", Side = 1}) do
+            ui1:Label({
+                Name = "This is a label"
+            })
+            
+            ui1:Toggle({
+                Name = "Basic Toggle",
+                Flag = "BasicToggle",
+                Default = false,
+                Callback = function(v)
+                    print("Toggle:", v)
+                end
+            })
+            
+            tglwkb = ui1:Toggle({
+                Name = "Toggle with Keybind",
+                Flag = "ToggleKeybind",
+                Default = false,
+                Callback = function(v)
+                    print("Toggle with keybind:", v)
+                end
+            })
+            
+            tglwkb:Keybind({
+                Flag = "ToggleKeybindKey",
+                Default = Enum.KeyCode.F,
+                Mode = "Toggle",
+                Callback = function(v)
+                    print("Keybind pressed:", v)
+                end
+            })
+            
+            tglwcp = ui1:Toggle({
+                Name = "Toggle with Color",
+                Flag = "ToggleColor",
+                Default = false,
+                Callback = function(v)
+                    print("Toggle with color:", v)
+                end
+            })
+            
+            tglwcp:Colorpicker({
+                Name = "Color",
+                Flag = "ToggleColorPicker",
+                Default = Color3.fromRGB(255, 0, 0),
+                Alpha = 0.5,
+                Callback = function(v)
+                    print("Color changed:", v)
+                end
+            })
+            
+            ui1:Slider({
+                Name = "Basic Slider",
+                Flag = "BasicSlider",
+                Min = 0,
+                Max = 100,
+                Default = 50,
+                Decimals = 1,
+                Suffix = "%",
+                Callback = function(v)
+                    print("Slider:", v)
+                end
+            })
+            
+            ui1:Dropdown({
+                Name = "Single Select",
+                Flag = "SingleSelect",
+                Items = {"Option 1", "Option 2", "Option 3", "Option 4"},
+                Default = "Option 1",
+                Multi = false,
+                Callback = function(v)
+                    print("Single select:", v)
+                end
+            })
+            
+            ui1:Dropdown({
+                Name = "Multi Select",
+                Flag = "MultiSelect", 
+                Items = {"Item A", "Item B", "Item C", "Item D", "Item E"},
+                Default = {"Item A"},
+                Multi = true,
+                Callback = function(v)
+                    print("Multi select:", v)
+                end
+            })
         end
-
-        do
-            sas = aimsp:Section({Name = "Silent Aim", Side = 1}) do
-                sas:Toggle({
-                    Name = "Enabled",
-                    Flag = "SilentAimEnabled",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                tgl = sas:Toggle({
-                    Name = "FoV Circle",
-                    Flag = "SilentAimFoVEnabled",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                tgl:Colorpicker({
-                    Name = "FoV",
-                    Flag = "SilentAimFoV",
-                    Default = lib.Theme.Accent,
-                    Alpha = 0,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                tgl:Colorpicker({
-                    Name = "FoV",
-                    Flag = "SilentAimFoVOutline",
-                    Default = Color3.fromRGB(0, 0, 0),
-                    Alpha = 0,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                sas:Dropdown({
-                    Name = "Bone",
-                    Flag = "SilentAimBone",
-                    Default = "Head",
-                    Multi = false,
-                    Items = {"Head", "Penis", "Ass", "Thigh", "Tits"},
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                sas:Toggle({
-                    Name = "Manipulation",
-                    Flag = "SilentAimManipulation",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                sas:Slider({
-                    Name = "Radius",
-                    Flag = "FoVRadius",
-                    Min = 1,
-                    Suffix = "px",
-                    Max = 500,
-                    Default = 75,
-                    Decimals = 1,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                sas:Toggle({
-                    Name = "Wall Check",
-                    Flag = "SilentAimFoVWallCheck",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                sas:Toggle({
-                    Name = "Team Check",
-                    Flag = "SilentAimFoVTeamCheck",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                sas:Toggle({
-                    Name = "Death Check",
-                    Flag = "SilentAimFoVDeathCheck",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-            end
-
-            aims = aimsp:Section({Name = "Camera", Side = 2}) do
-                aims:Toggle({
-                    Name = "Enabled",
-                    Flag = "AimbotEnabled",
-                    Default = false,
-                    Callback = function(v)
-                        print(v)
-                    end
-                }):Keybind({
-                    Flag = "AimbotKeybind",
-                    Default = Enum.KeyCode.E,
-                    Mode = "Toggle",
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-
-                aims:Searchbox({
-                    Name = "Searchbox",
-                    Flag = "Searchbox",
-                    Items = {"Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6", "Option 7", "Option 8", "Option 9", "Option 10", "Option 11"},
-                    Multi = false,
-                    Default = "Option 1",
-                    Callback = function(v)
-                        print(v)
-                    end
-                })
-            end
+        
+        ui2 = exmp:Section({Name = "Advanced Elements", Side = 2}) do
+            ui2:Textbox({
+                Name = "Text Input",
+                Flag = "TextInput",
+                Default = "Enter text here",
+                Callback = function(v)
+                    print("Text input:", v)
+                end
+            })
+            
+            ui2:Searchbox({
+                Name = "Search Box",
+                Flag = "SearchBox",
+                Items = {"Apple", "Banana", "Cherry", "Date", "Elderberry", "Fig", "Grape", "Honeydew"},
+                Multi = false,
+                Default = "Apple",
+                Callback = function(v)
+                    print("Search selected:", v)
+                end
+            })
+            
+            bnt1 = ui2:Button()
+            bnt1:Add("Single Button", function()
+                print("Single button clicked")
+            end)
+            
+            bnt2 = ui2:Button()
+            bnt2:Add("Button 1", function()
+                print("Button 1 clicked")
+            end)
+            bnt2:Add("Button 2", function()
+                print("Button 2 clicked")
+            end)
+            
+            bnt3 = ui2:Button()
+            bnt3:Add("Action", function()
+                print("Action button clicked")
+            end)
+            bnt3:Add("Reset", function()
+                print("Reset button clicked")
+            end)
+            bnt3:Add("Config", function()
+                print("Config button clicked")
+            end)
+            
+            ui2:Label({
+                Name = "Standalone Elements:"
+            })
+            
+            stcp = ui2:Toggle({
+                Name = "RGB Color Toggle",
+                Flag = "RGBColorToggle",
+                Default = false,
+                Callback = function(v)
+                    print("RGB color toggle:", v)
+                end
+            })
+            
+            stcp:Colorpicker({
+                Name = "RGB Color",
+                Flag = "RGBColor",
+                Default = Color3.fromRGB(0, 255, 0),
+                Alpha = 1,
+                Callback = function(v)
+                    print("RGB color:", v)
+                end
+            })
+            
+            stcp2 = ui2:Toggle({
+                Name = "RGBA Color Toggle", 
+                Flag = "RGBAColorToggle",
+                Default = false,
+                Callback = function(v)
+                    print("RGBA color toggle:", v)
+                end
+            })
+            
+            stcp2:Colorpicker({
+                Name = "RGBA Color",
+                Flag = "RGBAColor", 
+                Default = Color3.fromRGB(0, 0, 255),
+                Alpha = 0.8,
+                Callback = function(v)
+                    print("RGBA color:", v)
+                end
+            })
+            
+            stkb = ui2:Toggle({
+                Name = "Hotkey Toggle",
+                Flag = "HotkeyToggle",
+                Default = false,
+                Callback = function(v)
+                    print("Hotkey toggle:", v)
+                end
+            })
+            
+            stkb:Keybind({
+                Name = "Hotkey",
+                Flag = "Hotkey",
+                Default = Enum.KeyCode.G,
+                Mode = "Hold",
+                Callback = function(v)
+                    print("Hotkey:", v)
+                end
+            })
         end
     end
 end

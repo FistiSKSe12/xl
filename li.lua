@@ -115,6 +115,8 @@ local Library do
         KeyList = nil,
 
         Colorpickers = { },
+        
+        Unloading = false,
     }
 
     Library.__index = Library
@@ -644,7 +646,8 @@ local Library do
                 return
             end
 
-            Tween:Pause()
+            self.Tween:Pause()
+            self.Tween:Destroy()
             self = nil
         end
     end
@@ -707,7 +710,7 @@ local Library do
         end
 
         Instances.ChangeItemTheme = function(self, Properties)
-            if not self.Instance then 
+            if not self.Instance or (Library and Library.Unloading) then 
                 return
             end
 
@@ -735,7 +738,7 @@ local Library do
         end
 
         Instances.Tween = function(self, Info, Goal)
-            if not self.Instance then 
+            if not self.Instance or (Library and Library.Unloading) then 
                 return
             end
 
@@ -1010,18 +1013,46 @@ local Library do
     })
 
     Library.Unload = function(self)
-        for Index, Value in self.Connections do 
-            Value.Connection:Disconnect()
+        -- Set unloading flag to prevent further operations
+        self.Unloading = true
+        
+        -- Disconnect all connections
+        for Index, Value in pairs(self.Connections or {}) do 
+            if Value and Value.Connection then
+                Value.Connection:Disconnect()
+            end
         end
-
-        for Index, Value in self.Threads do 
-            coroutine.close(Value)
+        
+        -- Close all threads
+        for Index, Value in pairs(self.Threads or {}) do 
+            if Value then
+                coroutine.close(Value)
+            end
         end
-
+        
+        -- Clear theme items and map
+        self.ThemeItems = {}
+        self.ThemeMap = {}
+        
+        -- Clean up holder
         if self.Holder then 
             self.Holder:Clean()
         end
-
+        
+        -- Clean up mobile toggle if it exists
+        for _, Window in pairs(self.Pages or {}) do
+            if Window and Window.MobileToggle then
+                Window.MobileToggle:Clean()
+            end
+        end
+        
+        -- Clear all references
+        self.Connections = {}
+        self.Threads = {}
+        self.Pages = {}
+        self.Sections = {}
+        self.OpenFrames = {}
+        
         Library = nil 
         getgenv().Library = nil
 
@@ -1044,10 +1075,14 @@ local Library do
     end
 
     Library.Thread = function(self, Function)
+        if self.Unloading then return end
+        
         local NewThread = coroutine.create(Function)
         
         coroutine.wrap(function()
-            coroutine.resume(NewThread)
+            if not self.Unloading then
+                coroutine.resume(NewThread)
+            end
         end)()
 
         TableInsert(self.Threads, NewThread)
@@ -1067,6 +1102,8 @@ local Library do
     end
 
     Library.Connect = function(self, Event, Callback, Name)
+        if self.Unloading then return end
+        
         Name = Name or StringFormat("Connection%s%s", self.UnnamedConnections + 1, HttpService:GenerateGUID(false))
 
         local NewConnection = {
@@ -1077,7 +1114,9 @@ local Library do
         }
 
         Library:Thread(function()
-            NewConnection.Connection = Event:Connect(Callback)
+            if not self.Unloading and Event and Callback then
+                NewConnection.Connection = Event:Connect(Callback)
+            end
         end)
 
         TableInsert(self.Connections, NewConnection)
@@ -1205,6 +1244,8 @@ local Library do
     end
 
     Library.ChangeItemTheme = function(self, Item, Properties)
+        if self.Unloading then return end
+        
         Item = Item.Instance or Item
 
         if not self.ThemeMap[Item] then 
@@ -1216,14 +1257,18 @@ local Library do
     end
 
     Library.ChangeTheme = function(self, Theme, Color)
+        if self.Unloading then return end
+        
         self.Theme[Theme] = Color
 
-        for _, Item in self.ThemeItems do
-            for Property, Value in Item.Properties do
-                if type(Value) == "string" and Value == Theme then
-                    Item.Item[Property] = Color
-                elseif type(Value) == "function" then
-                    Item.Item[Property] = Value()
+        for _, Item in pairs(self.ThemeItems or {}) do
+            if Item and Item.Properties and Item.Item then
+                for Property, Value in pairs(Item.Properties) do
+                    if type(Value) == "string" and Value == Theme then
+                        Item.Item[Property] = Color
+                    elseif type(Value) == "function" then
+                        Item.Item[Property] = Value()
+                    end
                 end
             end
         end
@@ -5766,6 +5811,32 @@ local Library do
                 Window:SetOpen(not Window.IsOpen)
             end
         end)
+        
+        -- Mobile toggle button
+        if IsMobile then
+            local MobileToggle = Instances:Create("TextButton", {
+                Parent = gethui(),
+                Name = "MobileToggle",
+                Text = "Menu",
+                FontFace = Library.Font,
+                TextSize = 14,
+                TextColor3 = FromRGB(255, 255, 255),
+                BackgroundColor3 = FromRGB(20, 24, 21),
+                BorderColor3 = FromRGB(42, 49, 45),
+                BorderSizePixel = 2,
+                Size = UDim2New(0, 60, 0, 30),
+                Position = UDim2New(0, 10, 0, 10),
+                ZIndex = 1000
+            })
+            
+            MobileToggle:AddToTheme({BackgroundColor3 = "Inline", BorderColor3 = "Outline", TextColor3 = "Text"})
+            
+            MobileToggle:Connect("TouchTap", function()
+                Window:SetOpen(not Window.IsOpen)
+            end)
+            
+            Window.MobileToggle = MobileToggle
+        end
 
         local SearchStepped
 

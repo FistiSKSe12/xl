@@ -1040,10 +1040,16 @@ local Library do
         end
         
         -- Clean up mobile toggle if it exists
-        for _, Window in pairs(self.Pages or {}) do
-            if Window and Window.MobileToggle then
-                Window.MobileToggle:Clean()
+        for _, WindowData in pairs(self.Pages or {}) do
+            if WindowData and WindowData.Window and WindowData.Window.MobileToggle then
+                WindowData.Window.MobileToggle:Clean()
             end
+        end
+        
+        -- Also check if there's a direct mobile toggle reference
+        if getgenv().Library and getgenv().Library.MobileToggle then
+            getgenv().Library.MobileToggle:Clean()
+            getgenv().Library.MobileToggle = nil
         end
         
         -- Clear all references
@@ -5818,7 +5824,7 @@ local Library do
                 Parent = gethui(),
                 Name = "MobileToggle",
                 Text = "Menu",
-                FontFace = Library.Font,
+                FontFace = Library.Font or Font.new("rbxasset://fonts/families/SourceSansPro.json"),
                 TextSize = 14,
                 TextColor3 = FromRGB(255, 255, 255),
                 BackgroundColor3 = FromRGB(20, 24, 21),
@@ -6540,7 +6546,9 @@ local Library do
                         Flag = "Watermark",
                         Default = true,
                         Callback = function(Value)
-                            Watermark:SetVisibility(Value)
+                            if Watermark then
+                                Watermark:SetVisibility(Value)
+                            end
                         end
                     })
 
@@ -6549,7 +6557,9 @@ local Library do
                         Flag = "Keybind list",
                         Default = true,
                         Callback = function(Value)
-                            KeybindList:SetVisibility(Value)
+                            if KeybindList then
+                                KeybindList:SetVisibility(Value)
+                            end
                         end
                     })
 

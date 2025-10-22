@@ -196,7 +196,91 @@ local Library do
     }
 
     local Themes = {
-        ["Preset"] = {
+        ["Aimware"] = {
+            ["Background"] = FromRGB(15, 15, 15),
+            ["Border"] = FromRGB(10, 10, 10),
+            ["Inline"] = FromRGB(20, 20, 20),
+            ["Hovered Element"] = FromRGB(30, 30, 30),
+            ["Page Background"] = FromRGB(15, 15, 15),
+            ["Outline"] = FromRGB(15, 15, 15),
+            ["Element"] = FromRGB(15, 15, 15),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(200, 200, 200),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(150, 150, 150),
+            ["Accent"] = FromRGB(255, 0, 0)
+        },
+        ["AirFlow"] = {
+            ["Background"] = FromRGB(15, 15, 15),
+            ["Border"] = FromRGB(10, 10, 10),
+            ["Inline"] = FromRGB(20, 20, 20),
+            ["Hovered Element"] = FromRGB(30, 30, 30),
+            ["Page Background"] = FromRGB(15, 15, 15),
+            ["Outline"] = FromRGB(25, 25, 25),
+            ["Element"] = FromRGB(15, 15, 15),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(94, 94, 94),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(80, 80, 80),
+            ["Accent"] = FromRGB(93, 88, 157)
+        },
+        ["Venom"] = {
+            ["Background"] = FromRGB(14, 14, 14),
+            ["Border"] = FromRGB(11, 11, 11),
+            ["Inline"] = FromRGB(18, 18, 18),
+            ["Hovered Element"] = FromRGB(28, 28, 28),
+            ["Page Background"] = FromRGB(14, 14, 14),
+            ["Outline"] = FromRGB(11, 11, 11),
+            ["Element"] = FromRGB(14, 14, 14),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(191, 191, 191),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(150, 150, 150),
+            ["Accent"] = FromRGB(255, 0, 0)
+        },
+        ["Cyan"] = {
+            ["Background"] = FromRGB(16, 16, 16),
+            ["Border"] = FromRGB(11, 11, 11),
+            ["Inline"] = FromRGB(20, 20, 20),
+            ["Hovered Element"] = FromRGB(30, 30, 30),
+            ["Page Background"] = FromRGB(15, 15, 15),
+            ["Outline"] = FromRGB(11, 11, 11),
+            ["Element"] = FromRGB(15, 15, 15),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(191, 191, 191),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(150, 150, 150),
+            ["Accent"] = FromRGB(0, 255, 239)
+        },
+        ["Burn"] = {
+            ["Background"] = FromRGB(12, 12, 12),
+            ["Border"] = FromRGB(8, 8, 8),
+            ["Inline"] = FromRGB(16, 16, 16),
+            ["Hovered Element"] = FromRGB(26, 26, 26),
+            ["Page Background"] = FromRGB(12, 12, 12),
+            ["Outline"] = FromRGB(12, 12, 12),
+            ["Element"] = FromRGB(12, 12, 12),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 130, 0),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(200, 100, 0),
+            ["Accent"] = FromRGB(255, 130, 0)
+        },
+        ["GameSense"] = {
+            ["Background"] = FromRGB(23, 23, 23),
+            ["Border"] = FromRGB(18, 18, 18),
+            ["Inline"] = FromRGB(27, 27, 27),
+            ["Hovered Element"] = FromRGB(37, 37, 37),
+            ["Page Background"] = FromRGB(23, 23, 23),
+            ["Outline"] = FromRGB(49, 55, 28),
+            ["Element"] = FromRGB(23, 23, 23),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(152, 226, 46)
+        },
+        ["Default"] = {
             ["Background"] = FromRGB(14, 17, 15),
             ["Border"] = FromRGB(12, 12, 12),
             ["Inline"] = FromRGB(20, 24, 21),
@@ -209,10 +293,248 @@ local Library do
             ["Text Stroke"] = FromRGB(0, 0, 0),
             ["Placeholder Text"] = FromRGB(185, 185, 185),
             ["Accent"] = FromRGB(255, 0, 0)
+        },
+        ["BBot"] = {
+            ["Background"] = FromRGB(30, 30, 30),
+            ["Border"] = FromRGB(20, 20, 20),
+            ["Inline"] = FromRGB(35, 35, 35),
+            ["Hovered Element"] = FromRGB(45, 45, 45),
+            ["Page Background"] = FromRGB(35, 35, 35),
+            ["Outline"] = FromRGB(20, 20, 20),
+            ["Element"] = FromRGB(30, 30, 30),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(126, 72, 163)
+        },
+        ["Fatality"] = {
+            ["Background"] = FromRGB(25, 19, 53),
+            ["Border"] = FromRGB(20, 14, 48),
+            ["Inline"] = FromRGB(30, 24, 66),
+            ["Hovered Element"] = FromRGB(40, 34, 76),
+            ["Page Background"] = FromRGB(30, 24, 66),
+            ["Outline"] = FromRGB(60, 53, 93),
+            ["Element"] = FromRGB(30, 24, 66),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(197, 7, 84)
+        },
+        ["Jester"] = {
+            ["Background"] = FromRGB(28, 28, 28),
+            ["Border"] = FromRGB(20, 20, 20),
+            ["Inline"] = FromRGB(32, 32, 32),
+            ["Hovered Element"] = FromRGB(42, 42, 42),
+            ["Page Background"] = FromRGB(36, 36, 36),
+            ["Outline"] = FromRGB(55, 55, 55),
+            ["Element"] = FromRGB(36, 36, 36),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(219, 68, 103)
+        },
+        ["Mint"] = {
+            ["Background"] = FromRGB(28, 28, 28),
+            ["Border"] = FromRGB(20, 20, 20),
+            ["Inline"] = FromRGB(32, 32, 32),
+            ["Hovered Element"] = FromRGB(42, 42, 42),
+            ["Page Background"] = FromRGB(36, 36, 36),
+            ["Outline"] = FromRGB(55, 55, 55),
+            ["Element"] = FromRGB(36, 36, 36),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(61, 180, 136)
+        },
+        ["Tokyo Night"] = {
+            ["Background"] = FromRGB(22, 22, 31),
+            ["Border"] = FromRGB(18, 18, 25),
+            ["Inline"] = FromRGB(26, 26, 35),
+            ["Hovered Element"] = FromRGB(36, 36, 45),
+            ["Page Background"] = FromRGB(25, 25, 37),
+            ["Outline"] = FromRGB(50, 50, 50),
+            ["Element"] = FromRGB(25, 25, 37),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(103, 89, 179)
+        },
+        ["Ubuntu"] = {
+            ["Background"] = FromRGB(50, 50, 50),
+            ["Border"] = FromRGB(25, 25, 25),
+            ["Inline"] = FromRGB(55, 55, 55),
+            ["Hovered Element"] = FromRGB(65, 65, 65),
+            ["Page Background"] = FromRGB(62, 62, 62),
+            ["Outline"] = FromRGB(25, 25, 25),
+            ["Element"] = FromRGB(62, 62, 62),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(226, 88, 30)
+        },
+        ["Quartz"] = {
+            ["Background"] = FromRGB(29, 27, 38),
+            ["Border"] = FromRGB(20, 20, 25),
+            ["Inline"] = FromRGB(33, 31, 42),
+            ["Hovered Element"] = FromRGB(43, 41, 52),
+            ["Page Background"] = FromRGB(35, 35, 48),
+            ["Outline"] = FromRGB(39, 35, 47),
+            ["Element"] = FromRGB(35, 35, 48),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(255, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(66, 110, 135)
+        },
+        ["Nord"] = {
+            ["Background"] = FromRGB(46, 52, 64),
+            ["Border"] = FromRGB(35, 40, 50),
+            ["Inline"] = FromRGB(50, 56, 68),
+            ["Hovered Element"] = FromRGB(60, 66, 78),
+            ["Page Background"] = FromRGB(59, 66, 82),
+            ["Outline"] = FromRGB(76, 86, 106),
+            ["Element"] = FromRGB(59, 66, 82),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(236, 239, 244),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(136, 192, 208)
+        },
+        ["Dracula"] = {
+            ["Background"] = FromRGB(40, 42, 54),
+            ["Border"] = FromRGB(30, 32, 44),
+            ["Inline"] = FromRGB(50, 52, 64),
+            ["Hovered Element"] = FromRGB(60, 62, 74),
+            ["Page Background"] = FromRGB(68, 71, 90),
+            ["Outline"] = FromRGB(98, 114, 164),
+            ["Element"] = FromRGB(68, 71, 90),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(248, 248, 242),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(255, 121, 198)
+        },
+        ["Monokai"] = {
+            ["Background"] = FromRGB(30, 31, 28),
+            ["Border"] = FromRGB(20, 21, 18),
+            ["Inline"] = FromRGB(35, 36, 33),
+            ["Hovered Element"] = FromRGB(45, 46, 43),
+            ["Page Background"] = FromRGB(39, 40, 34),
+            ["Outline"] = FromRGB(73, 72, 62),
+            ["Element"] = FromRGB(39, 40, 34),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(248, 248, 242),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(249, 38, 114)
+        },
+        ["Gruvbox"] = {
+            ["Background"] = FromRGB(40, 40, 40),
+            ["Border"] = FromRGB(30, 30, 30),
+            ["Inline"] = FromRGB(45, 45, 45),
+            ["Hovered Element"] = FromRGB(55, 55, 55),
+            ["Page Background"] = FromRGB(60, 56, 54),
+            ["Outline"] = FromRGB(80, 73, 69),
+            ["Element"] = FromRGB(60, 56, 54),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(235, 219, 178),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(251, 73, 52)
+        },
+        ["Solarized"] = {
+            ["Background"] = FromRGB(0, 43, 54),
+            ["Border"] = FromRGB(0, 30, 40),
+            ["Inline"] = FromRGB(5, 48, 59),
+            ["Hovered Element"] = FromRGB(15, 58, 69),
+            ["Page Background"] = FromRGB(7, 54, 66),
+            ["Outline"] = FromRGB(88, 110, 117),
+            ["Element"] = FromRGB(7, 54, 66),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(131, 148, 150),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(100, 120, 125),
+            ["Accent"] = FromRGB(203, 75, 22)
+        },
+        ["Catppuccin"] = {
+            ["Background"] = FromRGB(30, 30, 46),
+            ["Border"] = FromRGB(20, 20, 36),
+            ["Inline"] = FromRGB(35, 35, 51),
+            ["Hovered Element"] = FromRGB(45, 45, 61),
+            ["Page Background"] = FromRGB(48, 45, 65),
+            ["Outline"] = FromRGB(87, 82, 104),
+            ["Element"] = FromRGB(48, 45, 65),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(217, 224, 238),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(245, 194, 231)
+        },
+        ["One Dark"] = {
+            ["Background"] = FromRGB(33, 37, 43),
+            ["Border"] = FromRGB(23, 27, 33),
+            ["Inline"] = FromRGB(38, 42, 48),
+            ["Hovered Element"] = FromRGB(48, 52, 58),
+            ["Page Background"] = FromRGB(40, 44, 52),
+            ["Outline"] = FromRGB(92, 99, 112),
+            ["Element"] = FromRGB(40, 44, 52),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(171, 178, 191),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(140, 147, 160),
+            ["Accent"] = FromRGB(198, 120, 221)
+        },
+        ["Cyberpunk"] = {
+            ["Background"] = FromRGB(26, 26, 46),
+            ["Border"] = FromRGB(16, 16, 36),
+            ["Inline"] = FromRGB(31, 31, 51),
+            ["Hovered Element"] = FromRGB(41, 41, 61),
+            ["Page Background"] = FromRGB(38, 35, 53),
+            ["Outline"] = FromRGB(65, 60, 94),
+            ["Element"] = FromRGB(38, 35, 53),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(249, 249, 249),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(0, 255, 159)
+        },
+        ["Oceanic Next"] = {
+            ["Background"] = FromRGB(22, 35, 42),
+            ["Border"] = FromRGB(12, 25, 32),
+            ["Inline"] = FromRGB(27, 40, 47),
+            ["Hovered Element"] = FromRGB(37, 50, 57),
+            ["Page Background"] = FromRGB(27, 43, 52),
+            ["Outline"] = FromRGB(52, 61, 70),
+            ["Element"] = FromRGB(27, 43, 52),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(216, 222, 233),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(102, 153, 204)
+        },
+        ["Material"] = {
+            ["Background"] = FromRGB(21, 21, 21),
+            ["Border"] = FromRGB(11, 11, 11),
+            ["Inline"] = FromRGB(26, 26, 26),
+            ["Hovered Element"] = FromRGB(36, 36, 36),
+            ["Page Background"] = FromRGB(33, 33, 33),
+            ["Outline"] = FromRGB(66, 66, 66),
+            ["Element"] = FromRGB(33, 33, 33),
+            ["Gradient"] = FromRGB(208, 208, 208),
+            ["Text"] = FromRGB(238, 255, 255),
+            ["Text Stroke"] = FromRGB(0, 0, 0),
+            ["Placeholder Text"] = FromRGB(185, 185, 185),
+            ["Accent"] = FromRGB(130, 170, 255)
         }
     }
 
-    Library.Theme = TableClone(Themes["Preset"])
+    Library.Theme = TableClone(Themes["AirFlow"])
 
     -- Folders
     for Index, Value in Library.Folders do 
@@ -6029,6 +6351,28 @@ local Library do
     Library.CreateSettingsPage = function(self, Window, Watermark, KeybindList)
         local SettingsPage = Window:Page({Name = "Settings", SubPages = true}) do 
             local ThemingSubPage = SettingsPage:SubPage({Name = "Theming", Columns = 2}) do 
+                local ThemePresetsSection = ThemingSubPage:Section({Name = "Theme Presets", Side = 2}) do
+                    ThemePresetsSection:Dropdown({
+                        Name = "Theme",
+                        Flag = "ThemePreset",
+                        Items = {"Aimware", "AirFlow", "Venom", "Cyan", "Burn", "GameSense", "Default", "BBot", "Fatality", "Jester", "Mint", "Tokyo Night", "Ubuntu", "Quartz", "Nord", "Dracula", "Monokai", "Gruvbox", "Solarized", "Catppuccin", "One Dark", "Cyberpunk", "Oceanic Next", "Material"},
+                        Default = "AirFlow",
+                        Callback = function(Value)
+                            local SelectedTheme = Themes[Value]
+                            if SelectedTheme then
+                                for ThemeKey, ThemeColor in SelectedTheme do
+                                    Library.Theme[ThemeKey] = ThemeColor
+                                    Library:ChangeTheme(ThemeKey, ThemeColor)
+                                    
+                                    if Library.Flags[ThemeKey.."Theme"] then
+                                        Library.SetFlags[ThemeKey.."Theme"](ThemeColor, Library.Flags[ThemeKey.."Theme"].Alpha or 0)
+                                    end
+                                end
+                            end
+                        end
+                    })
+                end
+
                 local ThemesSection = ThemingSubPage:Section({Name = "Themes", Side = 1}) do
                     for Index, Value in Library.Theme do 
                         ThemesSection:Label(Index):Colorpicker({

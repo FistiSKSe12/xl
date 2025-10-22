@@ -7,8 +7,11 @@ wnd = lib:Window({
     FadeTime = 0.3,
 })
 
-wtm = lib:Watermark("This is a watermark")
-kbl = lib:KeybindList()
+showwtm = true
+showkbl = true
+
+wtm = showwtm and lib:Watermark("This is a watermark") or nil
+kbl = showkbl and lib:KeybindList() or nil
 
 do 
     cmbtp = wnd:Page({Name = "Combat", SubPages = true})
